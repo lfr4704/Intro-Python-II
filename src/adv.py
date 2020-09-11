@@ -21,6 +21,8 @@ to north. The smell of gold permeates the air."""),
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
+    'dragon_lair': Room("Dragon's Liar",
+    "You're engulfed in flames as the ancient dragon's breath fills the room.")
 }
 
 
@@ -42,7 +44,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
-player = Player('Pyewacket', location=rooms['outside'])
+player = Player('Pyewacket', location=room['outside'])
 print(f"\n{player.name}'s starting location: {player.location.name}")
 print(f"{player.location.description}")
 
@@ -69,7 +71,8 @@ while True:
     if not user_input:
         continue
     else:
-        user_input == 'q':
+        user_input = user_input[0].lower()
+    if user_input == 'q':
         exit()
     if user_input in direction_dispatch.keys():
         target = direction_dispatch[user_input](player.location)
