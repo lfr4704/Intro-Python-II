@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from Fortuna import d
 
 # Declare all the rooms
 
@@ -30,6 +31,8 @@ room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
 room['foyer'].e_to = room['narrow']
 room['overlook'].s_to = room['foyer']
+room['overlook'].n_to = room['dragon_lair']
+room['dragon_lair'].s_to = room['overlook']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
@@ -54,3 +57,38 @@ print(f"{player.location.description}")
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+while True:
+    direction_dispatch = {
+    'n': lambda x: x.n_to,
+    's': lambda x: x.s_to,
+    'e': lambda x: x.e_to,
+    'w': lambda x: x.w_to,
+    }
+    user_input = input("\nWhere would you like to go next?")
+    if not user_input:
+        continue
+    else:
+        user_input == 'q':
+        exit()
+    if user_input in direction_dispatch.keys():
+        target = direction_dispatch[user_input](player.location)
+        if target:
+            player.location = target
+            if target.name != "Dragon's Liar":
+                print(f'{player.name} enters the {player.location.name}')
+                print(f'{player.location.description}')
+            else:
+                if d(20) > 15:
+                    print(f'{player.name} enters the {player.location.name}')
+                    print(f'{player.location.description}')
+                    print('You have been incinerated!')
+                else:
+                    print("You attempt to gain entry to the Dragon's Lair,\n"
+                    "but fall to your death crossing the chasm.")
+                exit()
+        else:
+            print("You cannot go that way!")
+    else:
+        print(f"You cannot go that way, '{user_input}' is not a valid "
+        f"direction.\nTry one of these: (n,s,e,w)")
